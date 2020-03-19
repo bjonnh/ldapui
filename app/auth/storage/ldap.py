@@ -330,11 +330,17 @@ class LdapWrap:
         except IndexError:
             raise ValueError("User {} doesn't exist.".format(username))
 
-    def search(self, base, query):
-        self.manager_conn.search(base, query, attributes=[
+    def search(self, base, query, retry=3):
+        if retry==0:
+            raise ValueError("Sorry impossible to connect")
+        try:
+            self.manager_conn.search(base, query, attributes=[
                 ldap3.ALL_ATTRIBUTES,
                 ldap3.ALL_OPERATIONAL_ATTRIBUTES])
-
+        except ldap3.core.exceptions.LDAPSocketOpenError:
+            # Reset the connection
+            self.manager_conn(True)
+            return self.search(base, query, retry-1)
         return self.manager_conn.entries
 
     def change_password(self, username, password):
