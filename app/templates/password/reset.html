@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block container %}
+
+<h3>Reset your password</h3>
+ <div class="top-pad">
+    <form
+        method="POST"
+        action="{{ url_for('password.reset') }}"
+        role="form">
+      {{ form.csrf_token }}
+      {{ form.authcode(readonly="readonly") }}
+      <div class="form-group">{{ form.password.label }}: {{ form.password() }}</div>
+      <div class="form-group">{{ form.password2.label }}: {{ form.password2() }}</div>
+
+
+      <button type="submit" class="btn btn-default">Reset my password</button>
+    </form>
+  </div>
+
+{% endblock %}

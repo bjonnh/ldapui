@@ -1,0 +1,24 @@
+{% extends 'home.html' %}
+
+{% block container %}
+  <div class="container">
+  <div class="row justify-content-md-center">
+    <div class="col col-sm-2">
+    <form
+        method="POST"
+        action="{{ url_for('login.login') }}"
+        role="form"
+        class="form">
+      {{ form.csrf_token }}
+
+
+      <div class="form-group">{{ form.username.label }} {{ form.username(class="form-control") }}</div>
+      <div class="form-group">{{ form.password.label }} {{ form.password(class="form-control") }}</div>
+      <button type="submit" class="btn btn-default">Login</button><br>
+        <a href="{{ url_for('password.reset') }}" >Lost your password?</a>
+    </form>
+  </div>
+  </div>
+  </div>
+
+{% endblock %}

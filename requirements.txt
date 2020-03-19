@@ -1,0 +1,7 @@
+ldap3
+flask
+wtforms
+flask-wtf
+flask-sqlalchemy
+flask-login
+werkzeug

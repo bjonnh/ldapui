@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block container %}
+
+
+<h3>Reset your password</h3>
+ <div class="top-pad">
+    <form
+        method="POST"
+        action="{{ url_for('password.reset') }}"
+        role="form">
+      {{ form.csrf_token }}
+        Enter your email and you will receive a link with the instructions on how to change your password.
+
+      <div class="form-group">{{ form.mail.label }}: {{ form.mail() }}</div>
+
+
+      <button type="submit" class="btn btn-default">Reset my password</button>
+    </form>
+  </div>
+
+{% endblock %}

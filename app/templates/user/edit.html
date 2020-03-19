@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block container %}
+
+  {% if current_user.is_authenticated %}
+
+{% if current_user.is_admin %}
+<h3>Edit this user?</h3>
+<a href="{{ url_for('user.remove') }}?username={{ form.username.data }}">Remove</a>
+
+ <div class="top-pad">
+    <form
+        method="POST"
+        action="{{ url_for('user.edit') }}"
+        role="form">
+      {{ form.csrf_token }}
+      <div class="form-group">{{ form.username.label }}: {{ form.username(class="form-control", readonly="readonly") }}</div>
+      <div class="form-group">{{ form.password.label }}: {{ form.password(class="form-control") }}</div>
+      <div class="form-group">{{ form.password2.label }}: {{ form.password2(class="form-control") }}</div>
+      <div class="form-group">{{ form.mail.label }}: {{ form.mail(class="form-control") }}</div>
+      <div class="form-group">{{ form.display_name.label }}: {{ form.display_name(class="form-control") }}</div>
+        <div class="form-group">{{ form.surname.label }}: {{ form.surname(class="form-control") }}</div>
+    <div class="form-group">{{ form.groups.label }}: {{ form.groups }}</div>
+
+      <button type="submit" class="btn btn-default">Save</button>
+    </form>
+  </div>
+{% endif %}
+  {% endif %}
+{% endblock %}

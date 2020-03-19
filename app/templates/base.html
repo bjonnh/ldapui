@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BjoLDAP</title>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
+      <link href="{{ url_for('static', filename='css/datatables.min.css')}}" rel="stylesheet">
+  </head>
+  <body>
+
+  <div class="container">
+    <div class="row ">
+      <div class="col-md-6">
+          <a class="navbar-brand" href="{{ url_for('home.home') }}">Bjo LDAP manager</a>
+      </div>
+      <div class="col-md-6">
+          <span class="float-md-right">
+          {% if current_user.is_authenticated %}
+            {{ current_user.username }} <a href="{{ url_for('login.logout') }}" class="btn btn-secondary btn-sm">Logout</a>
+          {% else %}
+            <a href="{{ url_for('login.login') }}" class="btn btn-primary">Login</a>
+          {% endif %}
+          </span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="container">
+    <br/>
+    <div>
+      {% for category, message in get_flashed_messages(with_categories=true) %}
+        <div class="alert alert-{{category}} alert-dismissable">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+          {{ message }}
+        </div>
+      {% endfor %}
+      </div>
+
+         <hr>
+    {% block container %}{% endblock %}
+    </div>
+    <script src="{{ url_for('static', filename='js/jquery-3.3.1.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/datatables.min.js')}}"></script>
+    <script type="text/javascript">
+$(document).ready(function() {
+    	$('#grouptable').DataTable({"paging":   false,
+            "columnDefs": [
+    { "orderable": false, "targets": 2 },
+            { "orderable": false, "targets": 3 },
+  ]});
+	$('#usertable').DataTable({"paging": false,
+        "columnDefs": [
+    { "orderable": false, "targets": 4 }
+  ]});
+} );
+	</script>
+
+    {% block scripts %}
+    {% endblock %}
+  </body>
+</html>

@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block container %}
+{% if current_user.is_authenticated %}
+
+<div class="accordion" id="accordionExample">
+   <div class="card">
+    <div class="card-header" id="headingZero">
+      <h5 class="mb-0">
+        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseZero" aria-expanded="true" aria-controls="collapseZero">
+          Change password
+        </button>
+      </h5>
+    </div>
+
+    <div id="collapseZero" class="collapse" aria-labelledby="headingZero" data-parent="#accordionExample">
+      <div class="card-body">
+
+<form
+        method="POST"
+        action="{{ url_for('user.password') }}"
+        role="form">
+      {{ form.csrf_token }}
+      <div class="form-group">{{ form.password.label }} {{ form.password(class="form-control") }}</div>
+      <div class="form-group">{{ form.password2.label }} {{ form.password2(class="form-control") }}</div>
+      <button type="submit" class="btn btn-default">Change</button>
+    </form>
+
+      </div>
+    </div>
+  </div>
+      {% if current_user.is_admin %}
+    <div class="card">
+    <div class="card-header" id="headingOne">
+      <h5 class="mb-0">
+        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Groups
+        </button>
+      </h5>
+    </div>
+
+    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+      <div class="card-body">
+<a href="{{ url_for('group.add') }}">Add a group</a>
+<table class="table table-sm" id="grouptable">
+    <thead>
+    <tr>
+    <th scope="col">gidNumber</th><th scope="col">name</th><th scope="col">members</th><th scope="col">actions</td>
+    </tr>
+    </thead>
+    <tbody>
+    {% for group in groups %}
+        <tr>
+            <td>{{ group.gidNumber }}</td>
+            <td>{{ group.cn }}<br><span class="sm">{{ group.description}}</span></td>
+            <td> {% for member in group.members %} <a href="{{ url_for('user.edit') }}?username={{member}}">{{member}}</a> {% endfor %}</td>
+            <td><a href="{{ url_for('group.remove') }}?name={{ group.cn }}">Remove</a>
+            <a href="{{ url_for('group.edit') }}?name={{ group.cn }}">Edit</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+         Users
+        </button>
+      </h5>
+    </div>
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+      <div class="card-body">
+
+<a href="{{ url_for('user.add') }}">Add a user</a>
+<table class="table table-sm" id="usertable">
+    <thead>
+    <tr>
+        <th scope="col">uidNumber</th><th scope="col">cn</th><th scope="col">name</th>
+    <th scope="col">email</th><th scope="col">actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for user in users %}
+        <tr>
+            <td>{{ user.uidNumber }}</td>
+            <td>{{ user.cn }}</td>
+            <td>{{ user.displayName }}</td>
+            <td>{{ user.mail }}</td>
+            <td><a href="{{ url_for('user.remove') }}?username={{ user.cn }}">Remove</a>
+            <a href="{{ url_for('user.edit') }}?username={{ user.cn }}">Edit</a></td>
+
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+      </div>
+    </div>
+  </div>
+{% endif %}
+</div>
+  {% endif %}
+{% endblock %}
