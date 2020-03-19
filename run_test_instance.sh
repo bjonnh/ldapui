@@ -9,7 +9,7 @@ export MANAGER_USER=admin
 export MANAGER_PW=1234567890
 export MANAGER_PATH=dc=test,dc=nprod,dc=net
 export DC=dc=test,dc=nprod,dc=net
-export OU=dc=test,dc=nprod,dc=net
+export OU=ou=Users,dc=test,dc=nprod,dc=net
 export EMAIL_SERVER=""
 export EMAIL_LOGIN=""
 export EMAIL_PASSWORD=""
