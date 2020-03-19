@@ -1,0 +1,59 @@
+dn: dc=test,dc=nprod,dc=net
+dc: test
+objectClass: top
+objectClass: domain
+
+
+dn: ou=Users,dc=test,dc=nprod,dc=net
+ou: Users
+objectClass: top
+objectClass: organizationalUnit
+description: Parent object of all UNIX accounts
+
+# We put our groups in users as well… This will have to change maybe?
+
+dn: cn=admin,ou=Users,dc=test,dc=nprod,dc=net
+objectClass: top
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: posixAccount
+uid: admin
+sn: Admin
+cn: admin
+userPassword: admin
+uidNumber: 12
+gidNumber: 12
+homeDirectory: /home/admin
+description: The Admin
+displayName: Ada Lovelace
+
+dn: cn=user,ou=Users,dc=test,dc=nprod,dc=net
+objectClass: top
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: posixAccount
+uid: user
+sn: User
+cn: user
+userPassword: user
+uidNumber: 13
+gidNumber: 13
+homeDirectory: /home/user
+description: The User
+displayName: Foo Bar
+
+
+dn: cn=Administrators,ou=Users,dc=test,dc=nprod,dc=net
+objectClass: posixGroup
+objectClass: top
+cn: Administrators
+gidNumber: 12
+memberUid: admin
+
+dn: cn=DataAccess,ou=Users,dc=test,dc=nprod,dc=net
+objectClass: posixGroup
+objectClass: top
+cn: Administrators
+gidNumber: 12
+memberUid: admin
+memberUid: user
