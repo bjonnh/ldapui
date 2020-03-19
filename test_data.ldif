@@ -53,7 +53,7 @@ memberUid: admin
 dn: cn=DataAccess,ou=Users,dc=test,dc=nprod,dc=net
 objectClass: posixGroup
 objectClass: top
-cn: Administrators
-gidNumber: 12
+cn: DataAccess
+gidNumber: 13
 memberUid: admin
 memberUid: user
