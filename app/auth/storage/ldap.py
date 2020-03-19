@@ -28,7 +28,9 @@ class LdapWrap:
         self._password = password
 
     @property
-    def manager_conn(self):
+    def manager_conn(self, reset = False):
+        if reset:
+            self._manager_conn = None
         if self._manager_conn is None:
             self._manager_conn = ldap3.Connection(
                 self._server,
