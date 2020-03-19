@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 docker run -it --rm --name ldapui_test_openldap \
            -p 127.0.1.1:389:389 \
            -e DEBUG_LEVEL=1 \
