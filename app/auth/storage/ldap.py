@@ -55,7 +55,10 @@ class LdapWrap:
     def is_admin(self, username):
         data = self.search(self._ou,
                            "(&(objectClass=posixGroup)(cn=Administrators))")
-
+        if len(data) == 0:
+            return False
+        if "memberUid" not in data[0]:
+            return False
         return username in data[0]['memberUid']
 
     @property
