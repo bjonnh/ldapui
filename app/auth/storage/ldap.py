@@ -93,7 +93,11 @@ class LdapWrap:
             uid_number = user['uidNumber'][0]
             cn = user['cn'][0]
             display_name = user['displayName'][0]
-            mail = user['mail'][0]
+            
+            if "mail" in user:
+                mail = user["mail"][0]
+            else:
+                mail = ""
 
             users.append({'uidNumber': uid_number,
                           'cn': cn,
