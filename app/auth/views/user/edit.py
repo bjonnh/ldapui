@@ -43,7 +43,7 @@ def edit():
             display_name = request.form.get('display_name')
 
             if pw != "" and pw == pw2:
-                ret = manager_ldap.update_user_password(username, pw)
+                ret = manager_ldap.change_password(username, pw)
                 if ret:
                     flash('User {} has a new password set'.format(username), 'info')
                     failed = False
