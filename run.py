@@ -1,13 +1,19 @@
 import os
 
-if 'WTF_CSRF_SECRET_KEY' not in os.environ:
-    raise ArgumentError("Please set a SECRET string into the WTF_CSRF_SECRET_KEY environment variable")
-if 'SECRET_KEY' not in os.environ:
-    raise ArgumentError("Please set another SECRET string into SECRET_KEY environment variable")
-if 'DC' not in os.environ:
-    raise ArgumentError("Please set the DC into DC environment variable")
-if 'OU' not in os.environ:
-    raise ArgumentError("Please set the OU into OU environment variable")
+environment_errors = {
+    "WTF_CSRF_SECRET_KEY": "Please set a SECRET string into the WTF_CSRF_SECRET_KEY environment variable",
+    "SECRET_KEY": "Please set a SECRET string different from the CSRF one into SECRET_KEY environment variable",
+    "DC": "Please set the DC into DC environment variable such as: dc=test,dc=nprod,dc=net",
+    "OU": "Please set the OU group of users into OU environment variable such as: ou=Users,dc=test,dc=nprod,dc=net"
+}
+
+for key, error in environment_errors.items():
+    if key not in os.environ:
+        raise Exception(error)
+
 from app import app
 
-app.run(debug=os.environ['DEBUG'] == "True", port=8086, host='0.0.0.0')
+port = os.getenv("PORT", 8080)
+host = os.getenv("HOST", "0.0.0.0")
+
+app.run(debug=os.environ['DEBUG'] == "True", port=port, host=host)

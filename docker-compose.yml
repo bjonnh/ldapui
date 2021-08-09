@@ -1,0 +1,44 @@
+services:
+  ldap:
+    build: tests/openldap_container/
+    environment:
+      - DEBUG_LEVEL=1
+      - DOMAIN=test.nprod.net
+      - ORGANIZATION="Test Instance LDAP"
+      - PASSWORD=1234567890
+    volumes:
+      - ./tests/openldap_container/data:/var/restore
+    restart: always
+  mailserver:
+    image: maildev/maildev:2.0.0-beta3
+    environment:
+      - MAILDEV_INCOMING_USER=emailuser
+      - MAILDEV_INCOMING_PASS=emailpassword
+    ports:
+      - 1080:1080
+  service:
+    build: .
+    environment:
+      - LDAP_HOST=ldap
+      - LDAP_PORT=389
+      - SECRET_KEY=foo
+      - WTF_CSRF_SECRET_KEY=bar
+      - MANAGER_USER=admin
+      - MANAGER_PW=1234567890
+      - MANAGER_PATH=dc=test,dc=nprod,dc=net
+      - DC=dc=test,dc=nprod,dc=net
+      - OU=ou=Users,dc=test,dc=nprod,dc=net
+      - EMAIL_SERVER=mailserver
+      - EMAIL_LOGIN=emailuser
+      - EMAIL_PASSWORD=emailpassword
+      - EMAIL_PORT=1025
+      - EMAIL_NAME=LDAP Test instance
+      - EMAIL_FROM=test@test.com
+      - EMAIL_TLS=False
+      - SITE_NAME=LDAP Test instance
+      - SITE_URL=http://127.0.0.1:8080
+      - DEBUG=True
+      - PORT=8080
+      - HOST=0.0.0.0
+    ports:
+      - 8080:8080
