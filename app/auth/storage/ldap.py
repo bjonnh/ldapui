@@ -1,7 +1,9 @@
+import os
+
 import ldap3
 import ldap3.utils.conv
+
 from app.helpers.ldap import alnum, sha_password
-import os
 
 
 class LdapWrap:
@@ -27,7 +29,7 @@ class LdapWrap:
         self._username = user
         self._password = password
 
-    def manager_conn(self, reset = False):
+    def manager_conn(self, reset=False):
         if reset:
             self._manager_conn = None
         if self._manager_conn is None:
@@ -139,7 +141,7 @@ class LdapWrap:
         if members is None:
             members = []
 
-        # Ensure user doesn't already exist
+        # Ensure group doesn't already exist
         try:
             self.get_gid_by_cn(name)
 
@@ -147,8 +149,7 @@ class LdapWrap:
         except ValueError:
             pass
 
-        cn = 'cn={},{}'.format(alnum(name),
-                               self._ou)
+        cn = 'cn={},{}'.format(alnum(name), self._ou)
 
         param = {'cn': alnum(name),
                  'gidNumber': self._get_next_gid(),
@@ -160,6 +161,7 @@ class LdapWrap:
             param)
 
         for member in members:
+            print(f"Trying to add {member}")
             res &= self.add_member_to_group(name, member)
 
         return res
@@ -195,12 +197,11 @@ class LdapWrap:
         self.get_gid_by_cn(self.safe_string(group_name))
         self.get_uid_by_cn(self.safe_string(user_name))
 
-        res = self.modify('cn={}, ou=Users,{}'.format(
-            self.safe_string(
-                group_name),
+        res = self.modify('cn={},ou=Users,{}'.format(
+            self.safe_string(group_name),
             self._dc),
-                {'memberUid': [(ldap3.MODIFY_ADD,
-                               [self.safe_string(user_name)])]})
+            {'memberUid': [(ldap3.MODIFY_ADD,
+                            [self.safe_string(user_name)])]})
 
         return res
 
@@ -208,12 +209,12 @@ class LdapWrap:
         self.get_gid_by_cn(self.safe_string(group_name))
         self.get_uid_by_cn(self.safe_string(user_name))
 
-        res = self.modify('cn={}, ou=Users,{}'.format(
+        res = self.modify('cn={},ou=Users,{}'.format(
             self.safe_string(
                 group_name),
             self._dc),
-                {'memberUid': [(ldap3.MODIFY_DELETE,
-                               [self.safe_string(user_name)])]})
+            {'memberUid': [(ldap3.MODIFY_DELETE,
+                            [self.safe_string(user_name)])]})
 
         return res
 
@@ -223,10 +224,10 @@ class LdapWrap:
         user_current_ldap_groups = set(self.groups_of_user(username))
         ret = True
 
-        for group in list(user_current_ldap_groups-user_new_ldap_groups):
+        for group in list(user_current_ldap_groups - user_new_ldap_groups):
             ret &= self.remove_member_from_group(group, username)
 
-        for group in list(user_new_ldap_groups-user_current_ldap_groups):
+        for group in list(user_new_ldap_groups - user_current_ldap_groups):
             ret &= self.add_member_to_group(group, username)
 
         return ret
@@ -313,7 +314,7 @@ class LdapWrap:
             return self.search(
                 self._ou,
                 '(&(objectClass=posixGroup)(cn={}))'.format(
-                        name))[0]['gidNumber'].value
+                    name))[0]['gidNumber'].value
         except IndexError:
             raise ValueError("Group {} doesn't exist.".format(name))
 
@@ -324,45 +325,45 @@ class LdapWrap:
             return self.search(
                 self._ou,
                 '(&(objectClass=posixAccount)(cn={}))'.format(
-                        username))[0]['uidNumber'].value
+                    username))[0]['uidNumber'].value
         except IndexError:
             raise ValueError("User {} doesn't exist.".format(username))
 
     def add(self, base, query, param, retry=3):
-        if retry==0:
+        if retry == 0:
             raise ValueError("Sorry impossible to connect to add")
         try:
             out = self.manager_conn().add(base, query, param)
         except ldap3.core.exceptions.LDAPSocketOpenError:
             # Reset the connection
             self.manager_conn(True)
-            return self.add(base, query, param, retry-1)
+            return self.add(base, query, param, retry - 1)
         return out
 
     def modify(self, base, param, retry=3):
-        if retry==0:
+        if retry == 0:
             raise ValueError("Sorry impossible to connect to modify")
         try:
             out = self.manager_conn().modify(base, param)
         except ldap3.core.exceptions.LDAPSocketOpenError:
             # Reset the connection
             self.manager_conn(True)
-            return self.modify(base, param, retry-1)
+            return self.modify(base, param, retry - 1)
         return out
 
     def delete(self, base, retry=3):
-        if retry==0:
+        if retry == 0:
             raise ValueError("Sorry impossible to connect to delete")
         try:
             out = self.manager_conn().delete(base)
         except ldap3.core.exceptions.LDAPSocketOpenError:
             # Reset the connection
             self.manager_conn(True)
-            return self.delete(base, retry-1)
+            return self.delete(base, retry - 1)
         return out
 
     def search(self, base, query, retry=3):
-        if retry==0:
+        if retry == 0:
             raise ValueError("Sorry impossible to connect to search")
         try:
             self.manager_conn().search(base, query, attributes=[
@@ -371,7 +372,7 @@ class LdapWrap:
         except ldap3.core.exceptions.LDAPSocketOpenError:
             # Reset the connection
             self.manager_conn(True)
-            return self.search(base, query, retry-1)
+            return self.search(base, query, retry - 1)
         return self.manager_conn().entries
 
     def change_password(self, username, password):
@@ -380,8 +381,8 @@ class LdapWrap:
         res = self.modify('cn={},{}'.format(
             alnum(username),
             self._ou),
-                {'userPassword': [(ldap3.MODIFY_REPLACE,
-                                   [sha_password(password)])]})
+            {'userPassword': [(ldap3.MODIFY_REPLACE,
+                               [sha_password(password)])]})
 
         return res
 
@@ -389,8 +390,8 @@ class LdapWrap:
         res = self.modify('cn={},{}'.format(
             alnum(name),
             self._ou),
-                {entry: [(ldap3.MODIFY_REPLACE,
-                          [value])]})
+            {entry: [(ldap3.MODIFY_REPLACE,
+                      [value])]})
 
         return res
 
@@ -423,7 +424,7 @@ class LdapWrap:
 
         # Grabbing the current value
         val = self.search(self._dc, '(cn=NextFreeUnixId)')
-        if len(val)==0:
+        if len(val) == 0:
             return 2000
         return val[0][uid_type].value - 1
 
@@ -438,5 +439,6 @@ class LdapWrap:
     @staticmethod
     def safe_string(string):
         return ldap3.utils.conv.escape_filter_chars(string)
+
 
 manager_ldap = LdapWrap("", "")
