@@ -2,21 +2,21 @@
 
 {% block container %}
 
-  {% if current_user.is_authenticated %}
+    {% if current_user.is_authenticated %}
 
-{% if current_user.is_admin %}
-<h3>Would you like to remove this user?</h3>
- <div class="top-pad">
-    <form
-        method="POST"
-        action="{{ url_for('user.remove') }}"
-        role="form">
-      {{ form.csrf_token }}
-        <div class="form-group">{{ form.username.label }} {{ form.username(class="form-control", readonly="readonly") }}</div>
-      <button type="submit" class="btn btn-default">Yes Remove</button>
-        <a href="{{ url_for('home.home') }}">No, go back</a>
-    </form>
-  </div>
-{% endif %}
-  {% endif %}
+        {% if current_user.is_admin %}
+            <h3>Would you like to remove this user?</h3>
+            <div class="top-pad">
+                <form
+                        method="POST"
+                        action="{{ url_for('user.remove') }}"
+                        role="form">
+                    {{ form.csrf_token }}
+                    <div class="form-group">{{ form.username.label }} {{ form.username(class="form-control", readonly="readonly") }}</div>
+                    <button type="submit" class="btn btn-primary">Yes Remove</button>
+                    <a href="{{ url_for('home.home') }}">No, go back</a>
+                </form>
+            </div>
+        {% endif %}
+    {% endif %}
 {% endblock %}

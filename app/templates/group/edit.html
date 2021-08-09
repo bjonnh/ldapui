@@ -2,26 +2,26 @@
 
 {% block container %}
 
-  {% if current_user.is_authenticated %}
+    {% if current_user.is_authenticated %}
 
-{% if current_user.is_admin %}
-<h3>Edit a group</h3>
-<a href="{{ url_for('group.remove') }}?name={{ form.name.data }}">Remove</a>
+        {% if current_user.is_admin %}
+            <h3>Edit a group</h3>
+            <a href="{{ url_for('group.remove') }}?name={{ form.name.data }}">Remove</a>
 
- <div class="top-pad">
-    <form
-        method="POST"
-        action="{{ url_for('group.edit') }}"
-        role="form">
-      {{ form.csrf_token }}
-      <div class="form-group">{{ form.name.label }}: {{ form.name(class="form-control", readonly="readonly") }}</div>
-        <div class="form-group">{{ form.description.label }}: {{ form.description(class="form-control") }}</div>
+            <div class="top-pad">
+                <form
+                        method="POST"
+                        action="{{ url_for('group.edit') }}"
+                        role="form">
+                    {{ form.csrf_token }}
+                    <div class="form-group">{{ form.name.label }}: {{ form.name(class="form-control", readonly="readonly") }}</div>
+                    <div class="form-group">{{ form.description.label }}: {{ form.description(class="form-control") }}</div>
 
-    <div class="form-group">{{ form.members.label }}: {{ form.members }}</div>
+                    <div class="form-group">{{ form.members.label }}: {{ form.members }}</div>
 
-      <button type="submit" class="btn btn-default">Save</button>
-    </form>
-  </div>
-{% endif %}
- {% endif %}
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>
+            </div>
+        {% endif %}
+    {% endif %}
 {% endblock %}

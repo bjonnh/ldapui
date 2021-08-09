@@ -1,7 +1,7 @@
 - [ ] Work on models.still_exist
 - [ ] Move the store to a thread safe storage?
 - [ ] Clean up the usermodel so it doesn't do LDAP stuff anymore
-- [ ] Deployment
+- [X] Deployment
 - [X] Reset password by email
 - [X] Change user password
 - [X] Add group

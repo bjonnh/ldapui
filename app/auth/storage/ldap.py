@@ -298,7 +298,10 @@ class LdapWrap:
         members = []
         if 'memberUid' in data[0]:
             members = data[0]['memberUid']
-        return {'description': data[0]['description'],
+        description = ""
+        if 'description' in data[0]:
+            description = data[0]['description']
+        return {'description': description,
                 'gid': data[0]['gidNumber'],
                 'members': members,
                 'cn': data[0]['cn']}

@@ -1,22 +1,34 @@
 {% extends 'base.html' %}
 
 {% block container %}
+    <div class="row">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card border-0 shadow rounded-3 my-5">
+                <div class="card-body p-4 p-sm-5">
+                    <h5 class="card-title text-center mb-5 fw-light fs-5">Reset your password</h5>
+
+                    <form
+                            method="POST"
+                            action="{{ url_for('password.reset') }}"
+                            role="form"
+                            class="form">
+                        {{ form.csrf_token }}
+                        <div class="form-floating mb-3">
+                            <input type="email" name="mail" class="form-control" id="floatingInput"
+                                   placeholder="you@yourhost.com">
+                            <label for="floatingInput">Email</label>
+                        </div>
 
 
-<h3>Reset your password</h3>
- <div class="top-pad">
-    <form
-        method="POST"
-        action="{{ url_for('password.reset') }}"
-        role="form">
-      {{ form.csrf_token }}
-        Enter your email and you will receive a link with the instructions on how to change your password.
+                        <div class="d-grid">
+                            <button class="btn btn-primary btn-login text-uppercase fw-bold" type="submit">Receive an
+                                email with password reset instructions
+                            </button>
+                        </div>
 
-      <div class="form-group">{{ form.mail.label }}: {{ form.mail() }}</div>
-
-
-      <button type="submit" class="btn btn-default">Reset my password</button>
-    </form>
-  </div>
-
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
